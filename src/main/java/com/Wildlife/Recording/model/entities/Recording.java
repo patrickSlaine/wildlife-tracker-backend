@@ -24,5 +24,60 @@ public class Recording {
     @JoinColumn
     private User submittedBy;
 
+    public Recording(UUID id, String speciesName, Double latitude, Double longitude, String imagePath, User submittedBy) {
+        this.id = id;
+        this.speciesName = speciesName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.imagePath = imagePath;
+        this.submittedBy = submittedBy;
+    }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
+    public void setSpeciesName(String speciesName) {
+        this.speciesName = speciesName;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public User getSubmittedBy() {
+        return submittedBy;
+    }
+
+    public void setSubmittedBy(User submittedBy) {
+        this.submittedBy = submittedBy;
+    }
 }
