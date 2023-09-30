@@ -22,5 +22,26 @@ public class PasswordHash {
         this.hashValue = hashValue;
     }
 
+    public PasswordHash(String hashValue){
+        this.hashValue = hashValue;
+    }
 
+    public PasswordHash(){
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getHashValue() {
+        return hashValue;
+    }
+
+    public void setHashValue(String hashValue) {
+        this.hashValue = hashValue;
+    }
 }

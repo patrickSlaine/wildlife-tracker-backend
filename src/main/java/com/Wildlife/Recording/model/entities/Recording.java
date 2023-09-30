@@ -20,17 +20,19 @@ public class Recording {
     private Double longitude;
     @Column(name="imagePath", nullable = false)
     private String imagePath;
-    @ManyToOne
-    @JoinColumn
-    private User submittedBy;
+    @Column(name="submittedBY",nullable = false)
+    private UUID submittedBy;
 
-    public Recording(UUID id, String speciesName, Double latitude, Double longitude, String imagePath, User submittedBy) {
+    public Recording(UUID id, String speciesName, Double latitude, Double longitude, String imagePath, UUID submittedBy) {
         this.id = id;
         this.speciesName = speciesName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.imagePath = imagePath;
         this.submittedBy = submittedBy;
+    }
+    public Recording(){
+
     }
 
     public UUID getId() {
@@ -73,11 +75,11 @@ public class Recording {
         this.imagePath = imagePath;
     }
 
-    public User getSubmittedBy() {
+    public UUID getSubmittedBy() {
         return submittedBy;
     }
 
-    public void setSubmittedBy(User submittedBy) {
+    public void setSubmittedBy(UUID submittedBy) {
         this.submittedBy = submittedBy;
     }
 }
