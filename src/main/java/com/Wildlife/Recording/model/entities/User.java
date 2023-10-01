@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name="User")
@@ -38,6 +39,8 @@ public class User {
         this.joiningDate = joiningDate;
         this.passwordHash = passwordHash;
     }
+    public User(){}
+
 
     public UUID getId() {
         return id;
@@ -93,5 +96,18 @@ public class User {
 
     public void setPasswordHash(PasswordHash passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(dateOfBirth, user.dateOfBirth) && Objects.equals(joiningDate, user.joiningDate) && Objects.equals(passwordHash, user.passwordHash);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userName, firstName, lastName, dateOfBirth, joiningDate);
     }
 }

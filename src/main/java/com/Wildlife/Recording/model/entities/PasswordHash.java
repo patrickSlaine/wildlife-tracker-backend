@@ -17,6 +17,12 @@ public class PasswordHash {
     @OneToOne
     private User user;
 
+    public PasswordHash(UUID id, String hashValue, User user){
+        this.id = id;
+        this.hashValue = hashValue;
+        this.user = user;
+    }
+
     public PasswordHash(UUID id, String hashValue){
         this.id = id;
         this.hashValue = hashValue;
@@ -43,5 +49,9 @@ public class PasswordHash {
 
     public void setHashValue(String hashValue) {
         this.hashValue = hashValue;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

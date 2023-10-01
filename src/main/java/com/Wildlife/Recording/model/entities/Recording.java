@@ -2,6 +2,7 @@ package com.Wildlife.Recording.model.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name="Recording")
@@ -81,5 +82,18 @@ public class Recording {
 
     public void setSubmittedBy(UUID submittedBy) {
         this.submittedBy = submittedBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recording recording = (Recording) o;
+        return Objects.equals(id, recording.id) && Objects.equals(speciesName, recording.speciesName) && Objects.equals(latitude, recording.latitude) && Objects.equals(longitude, recording.longitude) && Objects.equals(imagePath, recording.imagePath) && Objects.equals(submittedBy, recording.submittedBy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, speciesName, latitude, longitude, imagePath, submittedBy);
     }
 }
