@@ -81,7 +81,8 @@ public class UserManagementService {
         Optional<User> userData = userRepository.findById(userUuid);
         Optional<PasswordHash> password = passwordHashRepository.findById(passwordUuid);
 
-        if(userData.isPresent() && userData.get().getPasswordHash().getId() == passwordUuid){
+        if(userData.isPresent()
+                && userData.get().getPasswordHash().getId() == password.get().getId()){
 
             User u = userData.get();
             if(u.getPasswordHash().getHashValue().equals(oldPasswordHash)){

@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -129,6 +130,35 @@ public class RecordingManagementServiceTests {
         }
         fail();
 
+    }
+
+    @Test
+    public void readUsersValid(){
+        //Prepare
+        List<Recording> recordings = List.of(
+                new Recording(
+                        null,
+                        "Kangaroo",
+                        1.0000,
+                        2.0000,
+                        "/folderOne/kangaroo.png",
+                        UUID.randomUUID()),
+                new Recording(
+                        null,
+                        "Tiger",
+                        1.5000,
+                        2.0000,
+                        "/folderOne/tiger.png",
+                        UUID.randomUUID()));
+
+        given(recordingRepository.findAll()).willReturn(recordings);
+
+        //Act
+        List<Recording> testData = recordingService.readAllRecording();
+
+        //Assert
+        assertEquals(recordings.size(),testData.size());
+        assertEquals(recordings,testData);
     }
 
 
