@@ -2,6 +2,7 @@ package com.Wildlife.Recording.controller;
 
 import com.Wildlife.Recording.model.entities.PasswordHash;
 import com.Wildlife.Recording.model.entities.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.sql.Array;
+import java.util.*;
 
 import static com.Wildlife.Recording.configuration.DBSeeder.DB_SEEDER_USERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,6 +117,134 @@ public class UserControllerTests {
         //Assert
         List<User> after = getAllUsers();
         assertEquals(before.size(), after.size()-1);
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void postUserInvalidNoJson() throws Exception {
+
+        List<User> before = getAllUsers();
+        //Act
+        this.mockMvc
+                .perform(
+                        post(USER_ENDPOINT_URL+"/post")
+                                .header("Content-Type","application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        //Assert
+        List<User> after = getAllUsers();
+        assertEquals(before.size(), after.size());
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void postUserInvalidIncorrectJson() throws Exception {
+        Dictionary<String,String> testData = new Hashtable<>();
+        testData.put("Test","Test");
+
+        String JSON = objectMapper.writeValueAsString(testData);
+
+        List<User> before = getAllUsers();
+        //Act
+        this.mockMvc
+                .perform(
+                        post(USER_ENDPOINT_URL+"/post")
+                                .header("Content-Type","application/json")
+                                .content(JSON))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        //Assert
+        List<User> after = getAllUsers();
+        assertEquals(before.size(), after.size());
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void putUserValid() throws Exception {
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        user.setUserName("Bruce Lee");
+        String JSON = objectMapper.writeValueAsString(user);
+
+        //Act
+        JSON = mockMvc.perform(
+                    put(USER_ENDPOINT_URL+"/put/"+user.getId())
+                        .header("Content-Type","application/json")
+                        .content(JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        //Assert
+        User resultsUser = objectMapper.readValue(JSON, new TypeReference<User>() {});
+
+        assertNotNull(resultsUser);
+        assertEquals(user.hashCode(),resultsUser.hashCode());
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void putUserInvalidUserId() throws Exception {
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        String JSON = objectMapper.writeValueAsString(user);
+
+        List<User> before = getAllUsers();
+
+        //Act
+        mockMvc.perform(
+                        put(USER_ENDPOINT_URL+"/put/"+UUID.randomUUID())
+                        .header("Content-Type","application/json")
+                        .content(JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        //Assert
+        List<User> after = getAllUsers();
+        assertEquals(before.size(),after.size());
+    }
+
+    @Test
+    public void putUserInvalidRequestBody() throws Exception{
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        Dictionary<String,String> testData = new Hashtable<>();
+        testData.put("Test","Test");
+        String JSON = objectMapper.writeValueAsString(testData);
+
+        //Act
+        mockMvc.perform(
+                        put(USER_ENDPOINT_URL+"/put/"+user.getId())
+                        .header("Content-Type","application/json")
+                        .content(JSON))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        //Assert
+        String jsonUserAfter = mockMvc.perform(
+                get(USER_ENDPOINT_URL+"/get/"+user.getId()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        User userAfter = objectMapper.readValue(jsonUserAfter, new TypeReference<>(){});
+        assertEquals(user.hashCode(), userAfter.hashCode());
     }
 
     private List<User> getAllUsers() throws Exception{
