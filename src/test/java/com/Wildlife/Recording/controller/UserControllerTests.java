@@ -195,6 +195,35 @@ public class UserControllerTests {
     @Test
     @DirtiesContext
     @Rollback
+    public void putUserPasswordValid() throws Exception {
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        user.setUserName("Bruce Lee");
+        user.setPasswordHash(new PasswordHash(
+                            null,
+                            "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"));
+        String JSON = objectMapper.writeValueAsString(user);
+
+        //Act
+        JSON = mockMvc.perform(
+                        put(USER_ENDPOINT_URL+"/put/"+user.getId())
+                                .header("Content-Type","application/json")
+                                .content(JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        //Assert
+        User resultsUser = objectMapper.readValue(JSON, new TypeReference<User>() {});
+
+        assertNotNull(resultsUser);
+        assertEquals(user.hashCode(),resultsUser.hashCode());
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
     public void putUserInvalidUserId() throws Exception {
         //Prepare
         User user = DB_SEEDER_USERS.get(0);
@@ -245,6 +274,45 @@ public class UserControllerTests {
                 .getContentAsString();
         User userAfter = objectMapper.readValue(jsonUserAfter, new TypeReference<>(){});
         assertEquals(user.hashCode(), userAfter.hashCode());
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void deleteUserValid() throws Exception{
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        List<User> before = getAllUsers();
+
+        //Act
+        mockMvc.perform(delete(USER_ENDPOINT_URL+"/delete/"+user.getId()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        //Assert
+        List<User> after = getAllUsers();
+        assertEquals(before.size(), after.size()+1);
+    }
+
+    @Test
+    @DirtiesContext
+    @Rollback
+    public void deleteUserInvalidUserId() throws Exception{
+        //Prepare
+        List<User> before = getAllUsers();
+
+        //Act
+        mockMvc.perform(delete(USER_ENDPOINT_URL+"/delete/"+UUID.randomUUID()))
+                .andExpect(status().isNotFound())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        //Assert
+        List<User> after = getAllUsers();
+        assertEquals(before.size(),after.size());
     }
 
     private List<User> getAllUsers() throws Exception{
