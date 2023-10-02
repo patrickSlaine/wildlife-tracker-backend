@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {"spring.batch.job.enabled","false"})
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles({"h2","dbseeder"})
 public class UserControllerTests {
