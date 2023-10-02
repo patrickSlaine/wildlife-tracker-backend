@@ -57,7 +57,7 @@ public class UserManagementServiceTests {
     @Test
     public void createUserValid(){
         //Prepare
-        given(userRepository.findByUserName(user.getUserName())).willReturn(user);
+        given(userRepository.findByUserName(user.getUserName())).willReturn(null);
         given(userRepository.existsById(user.getId())).willReturn(true);
 
         //Act
@@ -70,8 +70,7 @@ public class UserManagementServiceTests {
     @Test
     public void createUserWithUserNameThatAlreadyExists(){
         //Prepare
-        given(userRepository.findByUserName(user.getUserName())).willReturn(null);
-
+        given(userRepository.findByUserName(user.getUserName())).willReturn(user);
         //Act
         try{
             userManagementService.createUser(user);

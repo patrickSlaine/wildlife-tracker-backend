@@ -25,9 +25,8 @@ public class User {
     private Date dateOfBirth;
     @Column(name="joiningDate",nullable = false)
     private Date joiningDate;
-    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="passwordHash_id", referencedColumnName = "id")
-    @JsonIgnore
     private PasswordHash passwordHash;
 
     public User(UUID id, String userName, String firstName, String lastName, Date dateOfBirth, Date joiningDate, PasswordHash passwordHash) {

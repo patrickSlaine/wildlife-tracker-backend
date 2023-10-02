@@ -30,7 +30,7 @@ public class UserManagementService {
 
 
     public boolean createUser(User user){
-        if(userRepository.findByUserName(user.getUserName()) == null){
+        if(userRepository.findByUserName(user.getUserName()) != null){
             throw new UserCreationException("User with the Username " + user.getUserName()+ " already exists.");
         }
         userRepository.save(user);

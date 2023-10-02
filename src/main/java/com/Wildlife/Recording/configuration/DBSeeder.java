@@ -56,6 +56,5 @@ public class DBSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception{
         recordingRepository.saveAll(DB_SEEDER_RECORDINGS);
         userRepository.saveAll(DB_SEEDER_USERS);
-        passwordHashRepository.saveAll(DB_SEEDER_PASSWORDS);
     }
 }
