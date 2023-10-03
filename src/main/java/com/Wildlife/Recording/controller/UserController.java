@@ -75,7 +75,7 @@ public class UserController {
     @PutMapping("/updatePassword/{userUuid}&{passwordUuid}")
     public ResponseEntity<?> updatePassword(@PathVariable("userUuid") UUID userUuid, @PathVariable("passwordUuid") UUID passwordUuid, @Valid @RequestBody PasswordUpdate passwordData){
         try{
-            PasswordHash newPasswordHash = new PasswordHash(passwordData.newPasswordHash);
+            PasswordHash newPasswordHash = new PasswordHash(passwordData.newPasswordHash, passwordData.newSalt);
             boolean updated = userManagementService.updatePassword(userUuid,passwordUuid,newPasswordHash, passwordData.oldPasswordHash);
             if(updated){
                 return ResponseEntity.ok("User Created");

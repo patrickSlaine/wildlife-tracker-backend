@@ -21,7 +21,8 @@ public class DBSeeder implements CommandLineRunner {
 
     public static PasswordHash userOnePassword = new PasswordHash(
             null,
-            "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
+            "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+            "salt");
 
     public static final List<Recording> DB_SEEDER_RECORDINGS = List.of(
             new Recording(null,"Cat",1.0000,2.0000,"/folderOne/cat.png", UUID.randomUUID()),

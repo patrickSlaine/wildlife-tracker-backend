@@ -42,7 +42,8 @@ public class UserRepositoryTests {
                 new Date("20/05/2023"),
                 new PasswordHash(
                         null,
-                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")
+                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                        "salt")
                         );
         //Act
         userRepository.save(user);
@@ -67,7 +68,8 @@ public class UserRepositoryTests {
                 new Date("20/05/2023"),
                 new PasswordHash(
                         null,
-                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")
+                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                        "salt")
         );
         userRepository.save(user);
 
@@ -101,7 +103,8 @@ public class UserRepositoryTests {
                 new Date("20/05/2023"),
                 new PasswordHash(
                         null,
-                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")
+                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                        "salt")
         );
         userRepository.save(user);
 

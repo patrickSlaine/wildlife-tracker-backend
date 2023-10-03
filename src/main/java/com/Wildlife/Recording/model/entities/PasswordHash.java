@@ -15,23 +15,29 @@ public class PasswordHash {
     @Column(name="hashValue",nullable = false)
     private String hashValue;
 
+    @Column(name="salt", nullable = true)
+    private String salt;
+
     @OneToOne
     @JsonIgnore
     private User user;
 
-    public PasswordHash(UUID id, String hashValue, User user){
+    public PasswordHash(UUID id, String hashValue, String salt, User user){
         this.id = id;
         this.hashValue = hashValue;
+        this.salt = salt;
         this.user = user;
     }
 
-    public PasswordHash(UUID id, String hashValue){
+    public PasswordHash(UUID id, String hashValue, String salt){
         this.id = id;
         this.hashValue = hashValue;
+        this.salt = salt;
     }
 
-    public PasswordHash(String hashValue){
+    public PasswordHash(String hashValue, String salt){
         this.hashValue = hashValue;
+        this.salt = salt;
     }
 
     public PasswordHash(){
@@ -55,5 +61,13 @@ public class PasswordHash {
 
     public User getUser() {
         return user;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

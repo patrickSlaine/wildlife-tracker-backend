@@ -50,7 +50,8 @@ public class UserManagementServiceTests {
                 new Date("13/09/2020"),
                 new PasswordHash(
                         null,
-                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")
+                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                        "salt")
                 );
     }
 
@@ -119,7 +120,8 @@ public class UserManagementServiceTests {
                     new Date("13/09/2020"),
                     new PasswordHash(
                         null,
-                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")),
+                        "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                            "salt")),
                 new User(
                         null,
                         "TestUser2",
@@ -129,7 +131,8 @@ public class UserManagementServiceTests {
                         new Date("14/10/2022"),
                         new PasswordHash(
                                 null,
-                                "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")));
+                                "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                                "salt")));
 
 
         given(userRepository.findAll()).willReturn(users);
@@ -225,7 +228,8 @@ public class UserManagementServiceTests {
                 user.getPasswordHash().getId(),
                 new PasswordHash(
                         null,
-                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31"
+                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31",
+                        "salt"
                         ),
                 user.getPasswordHash().getHashValue()
         );
@@ -247,7 +251,8 @@ public class UserManagementServiceTests {
                     user.getPasswordHash().getId(),
                     new PasswordHash(
                             null,
-                            "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+                            "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437",
+                            "salt"
                     ),
                     "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
             );
@@ -264,7 +269,8 @@ public class UserManagementServiceTests {
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
         given(passwordHashRepository.findById(user.getPasswordHash().getId())).willReturn(Optional.of(
                 new PasswordHash(passwordUuid,
-                        "")));
+                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31"
+                        ,"salt")));
 
         //Act
         boolean results = userManagementService.updatePassword(
@@ -272,7 +278,8 @@ public class UserManagementServiceTests {
                 user.getPasswordHash().getId(),
                 new PasswordHash(
                         null,
-                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31"
+                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31",
+                        "salt"
                 ),
                 user.getPasswordHash().getHashValue()
         );
@@ -294,7 +301,8 @@ public class UserManagementServiceTests {
                 user.getPasswordHash().getId(),
                 new PasswordHash(
                         null,
-                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31"
+                        "5c29a959abce4eda5f0e7a4e7ea53dce4fa0f0abbe8eaa63717e2fed5f193d31",
+                        "salt"
                 ),
                 user.getPasswordHash().getHashValue()
         );
