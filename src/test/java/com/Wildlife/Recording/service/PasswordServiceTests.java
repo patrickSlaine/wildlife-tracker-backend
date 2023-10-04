@@ -7,6 +7,7 @@ import com.Wildlife.Recording.model.exceptions.PasswordHashNotFoundException;
 import com.Wildlife.Recording.model.exceptions.UserNotFoundException;
 import com.Wildlife.Recording.repository.PasswordHashRepository;
 import com.Wildlife.Recording.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,12 +18,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.Wildlife.Recording.configuration.DBSeeder.DB_SEEDER_USERS;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class PasswordManagementServiceTests {
+public class PasswordServiceTests {
 
 
     @Mock
@@ -120,4 +120,78 @@ public class PasswordManagementServiceTests {
         }
         fail();
     }
+
+    @Test
+    public void getSaltValid(){
+        //Prepare
+        User user = DB_SEEDER_USERS.get(0);
+        PasswordHash passwordHash = user.getPasswordHash();
+        given(passwordHashRepository.findById(passwordHash.getId())).willReturn(Optional.of(passwordHash));
+
+        //Act & Assert
+        try{
+            String salt = passwordService.retrieveSalt(passwordHash.getId());
+            assertEquals(passwordHash.getSalt(),salt);
+        }catch(PasswordHashNotFoundException exception){
+            fail();
+        }
+    }
+
+    @Test
+    public void getSaltInvalidPasswordHashId(){
+        //Prepare
+        UUID uuid = UUID.randomUUID();
+        given(passwordHashRepository.findById(uuid)).willThrow(EntityNotFoundException.class);
+
+        //Act & Assert
+        try{
+            passwordService.retrieveSalt(uuid);
+        }catch(PasswordHashNotFoundException exception){
+            return;
+        }
+        fail();
+    }
+
+    @Test
+    public void validatePasswordValid(){
+        //Prepare
+        PasswordHash password = DB_SEEDER_USERS.get(0).getPasswordHash();
+        given(passwordHashRepository.findById(password.getId())).willReturn(Optional.of(password));
+
+        //Act
+        boolean validated = passwordService.validatePassword(password.getId(),password.getHashValue());
+
+        //Assert
+        assertTrue(validated);
+    }
+
+    @Test
+    public void validatePasswordIncorrectPassword(){
+        //Prepare
+        PasswordHash password = DB_SEEDER_USERS.get(0).getPasswordHash();
+        given(passwordHashRepository.findById(password.getId())).willReturn(Optional.of(password));
+
+        //Act
+        boolean validated = passwordService.validatePassword(
+                password.getId(),
+                "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d151234");
+
+        //Assert
+        assertFalse(validated);
+    }
+
+    @Test
+    public void validatePasswordInvalidPasswordHashId(){
+        UUID uuid = UUID.randomUUID();
+        given(passwordHashRepository.findById(uuid)).willThrow(EntityNotFoundException.class);
+
+        //Act & Assert
+        try{
+            passwordService.validatePassword(uuid,"5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d151234");
+        }catch(PasswordHashNotFoundException exception){
+            return;
+        }
+        fail();
+    }
+
 }
