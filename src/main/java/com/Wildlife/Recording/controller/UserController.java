@@ -72,22 +72,6 @@ public class UserController {
         }
     }
 
-    @PutMapping("/updatePassword/{userUuid}&{passwordUuid}")
-    public ResponseEntity<?> updatePassword(@PathVariable("userUuid") UUID userUuid, @PathVariable("passwordUuid") UUID passwordUuid, @Valid @RequestBody PasswordUpdate passwordData){
-        try{
-            PasswordHash newPasswordHash = new PasswordHash(passwordData.newPasswordHash, passwordData.newSalt);
-            boolean updated = userManagementService.updatePassword(userUuid,passwordUuid,newPasswordHash, passwordData.oldPasswordHash);
-            if(updated){
-                return ResponseEntity.ok("User Created");
-            }
-            throw new Exception();
-        }catch(UserNotFoundException exception){
-            throw new ResponseStatusException(NOT_FOUND, exception.getMessage());
-        }catch(Exception exception){
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR,exception.getMessage());
-        }
-    }
-
     @DeleteMapping("/delete/{uuid}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID uuid){
         try{

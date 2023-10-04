@@ -77,22 +77,4 @@ public class UserManagementService {
         }
     }
 
-    public boolean updatePassword(UUID userUuid, UUID passwordUuid ,PasswordHash passwordHash, String oldPasswordHash){
-        Optional<User> userData = userRepository.findById(userUuid);
-        Optional<PasswordHash> password = passwordHashRepository.findById(passwordUuid);
-
-        if(userData.isPresent()
-                && userData.get().getPasswordHash().getId() == password.get().getId()){
-
-            User u = userData.get();
-            if(u.getPasswordHash().getHashValue().equals(oldPasswordHash)){
-                u.setPasswordHash(passwordHash);
-                userRepository.save(u);
-                return true;
-            }
-            throw new InvalidPasswordException("The password you entered is incorrect");
-        }
-        return false;
-    }
-
 }
